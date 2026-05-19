@@ -55,9 +55,50 @@ function WorkshopMeta() {
 function AudienceSection() {
   return (
     <Stack gap={24}>
+      <H2>Setting the Stage</H2>
+      <Text tone="secondary">Why agentic code review exists, and what you told us in the pre-workshop survey.</Text>
+      <Stat value="15 min" label="This segment" />
+
+      <Divider />
+
+      <H2>The Why</H2>
+
+      <Callout tone="warning" title="AI coding agents have changed the volume equation">
+        Tools like Cursor, Copilot, and Codegen can produce hundreds of lines of working code in minutes. The bottleneck has shifted — it's no longer writing code, it's reviewing it safely.
+      </Callout>
+
+      <Grid columns={3} gap={12}>
+        <Stat value="10×" label="More code written per developer with AI agents" tone="danger" />
+        <Stat value="Same" label="Number of human reviewers" tone="warning" />
+        <Stat value="↑ Risk" label="Issues per PR if review doesn't scale" tone="danger" />
+      </Grid>
+
+      <H3>The problem with AI-generated code</H3>
+      <Stack gap={8}>
+        <Text>AI agents are optimized to produce code that <strong>runs</strong> — not code that is <strong>secure, maintainable, or correct under edge cases</strong>. They confidently generate SQL queries, auth flows, and API handlers that look right but contain real vulnerabilities.</Text>
+        <Text>When a single developer can open 10 PRs a day with agent assistance, a team of 3 reviewers can no longer provide meaningful review on every change. Reviews get skipped, rubber-stamped, or delayed — and bugs reach production.</Text>
+      </Stack>
+
+      <H3>The human-in-the-loop imperative</H3>
+      <Table
+        headers={['What AI agents do well', 'What still needs a human']}
+        rows={[
+          ['Generate syntactically correct code fast', 'Judge whether the approach is right for the problem'],
+          ['Implement known patterns from training data', 'Catch novel security flaws specific to your system'],
+          ['Produce working code for the happy path', 'Reason about edge cases, failure modes, and rollback'],
+          ['Write tests that pass existing assertions', 'Decide whether the tests actually cover the right behaviour'],
+          ['Follow style conventions when prompted', 'Own the architectural decision and its long-term consequences'],
+        ]}
+      />
+
+      <Callout tone="info" title="Where CodeRabbit fits">
+        CodeRabbit is the first automated gate in the human-in-the-loop chain. It handles the mechanical, repeatable part of review — flagging known vulnerability patterns, style violations, and missing checks — so your human reviewers can focus on intent, architecture, and judgment calls that only they can make.
+      </Callout>
+
+      <Divider />
+
       <H2>Participant Responses</H2>
       <Text tone="secondary">You filled out a pre-workshop survey. Here's what you told us.</Text>
-      <Stat value="15 min" label="This segment" />
 
       <Grid columns={2} gap={24}>
         <Stack gap={8}>
@@ -540,7 +581,7 @@ export default function CodeRabbitWorkshop() {
   const [section, setSection] = useCanvasState<Section>('audience');
 
   const sectionOptions = [
-    { value: 'audience',  label: '0. Participant Responses' },
+    { value: 'audience',  label: '0. Setting the Stage' },
     { value: 'story',     label: '1. The Scenario' },
     { value: 'local',     label: '2. Act 1: Review Before Push' },
     { value: 'pr',        label: '3. Act 2: Automated PR Review' },
@@ -561,7 +602,7 @@ export default function CodeRabbitWorkshop() {
           onChange={(v) => setSection(v as Section)}
         />
         <Spacer />
-        <Pill tone={section === 'audience'  ? 'success' : 'neutral'} onClick={() => setSection('audience')}>Participants</Pill>
+        <Pill tone={section === 'audience'  ? 'success' : 'neutral'} onClick={() => setSection('audience')}>Setting the Stage</Pill>
         <Pill tone={section === 'story'     ? 'success' : 'neutral'} onClick={() => setSection('story')}>Scenario</Pill>
         <Pill tone={section === 'local'     ? 'success' : 'neutral'} onClick={() => setSection('local')}>Act 1</Pill>
         <Pill tone={section === 'pr'        ? 'success' : 'neutral'} onClick={() => setSection('pr')}>Act 2</Pill>
