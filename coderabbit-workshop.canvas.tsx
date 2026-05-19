@@ -55,7 +55,7 @@ function WorkshopMeta() {
 function AudienceSection() {
   return (
     <Stack gap={24}>
-      <H2>Audience Today</H2>
+      <H2>Participant Responses</H2>
       <Text tone="secondary">You filled out a pre-workshop survey. Here's what you told us.</Text>
 
       <Grid columns={2} gap={24}>
@@ -452,67 +452,79 @@ reviews:
   );
 }
 
-// ─── SECTION: EXERCISES ─────────────────────────────────────────────────────
+// ─── SECTION: WRAP UP ───────────────────────────────────────────────────────
 
 function ExercisesSection() {
   return (
     <Stack gap={24}>
-      <H2>Hands-on</H2>
+      <H2>Wrap Up</H2>
+      <Text tone="secondary">
+        You've seen CodeRabbit work at every stage of the development loop — from your first keystroke to a merged PR. Here's what to take away and where to go next.
+      </Text>
+
       <Grid columns={3} gap={12}>
-        <Stat value="25 min" label="Total time" />
-        <Stat value="2" label="Exercises" />
-        <Stat value="~12 min" label="Each" />
+        <Stat value="2 layers" label="IDE extension + PR review" />
+        <Stat value="13" label="Issues caught automatically" tone="danger" />
+        <Stat value="0" label="Teammates interrupted" tone="success" />
       </Grid>
 
       <Divider />
 
-      <H3>Exercise 1 — Catch it before it leaves your machine</H3>
-      <Row gap={8} style={{ marginBottom: 4 }}><Pill tone="neutral">Extension</Pill></Row>
-      <Stack gap={6}>
-        <Text><strong>1.</strong> Clone the demo repo. Create a branch: <code>git checkout -b ex1/&lt;yourname&gt;</code></Text>
-        <Text><strong>2.</strong> Add a file with at least 2 of these issues:</Text>
-        <Table
-          headers={['Issue type', 'Example']}
-          rows={[
-            ['Broad exception', 'except Exception: pass'],
-            ['Hardcoded secret', 'token = "ghp_abc123"'],
-            ['Mutable default arg', 'def fn(items=[]): ...'],
-            ['SQL string concat', 'f"SELECT * WHERE id={id}"'],
-          ]}
-        />
-        <Text><strong>3.</strong> Stage → CodeRabbit panel → <strong>Review Staged Changes</strong>.</Text>
-        <Text><strong>4.</strong> Open inline chat on one comment → ask for a fix → click Apply.</Text>
-      </Stack>
-      <Callout tone="success" title="Goal">
-        At least one issue caught and fixed before the branch is pushed.
-      </Callout>
-
-      <Divider />
-
-      <H3>Exercise 2 — Let CodeRabbit review your PR</H3>
-      <Row gap={8} style={{ marginBottom: 4 }}><Pill tone="neutral">GitHub App</Pill></Row>
-      <Stack gap={6}>
-        <Text><strong>1.</strong> Push your branch and open a PR against main.</Text>
-        <Text><strong>2.</strong> Wait ~60s for the automatic review. Read the Summary and Walkthrough.</Text>
-        <Text><strong>3.</strong> Ask CodeRabbit two questions in the PR comments:</Text>
-        <CodeBlock>{`@coderabbitai What's the overall risk level of this PR?`}</CodeBlock>
-        <CodeBlock>{`@coderabbitai generate unit tests for the new functions`}</CodeBlock>
-        <Text><strong>4.</strong> Fix one flagged issue → push → watch CodeRabbit re-review only the changed lines.</Text>
-      </Stack>
-      <Callout tone="success" title="Goal">
-        A PR with a review, a risk assessment, and generated test stubs — all without asking a teammate.
-      </Callout>
-
-      <Divider />
-
-      <H3>Discussion</H3>
+      <H3>What we covered</H3>
       <Table
-        headers={['Question', 'Takeaway']}
+        headers={['Stage', 'Tool', 'What it does']}
         rows={[
-          ['Extension vs PR review — when do you use each?', 'Extension = your personal safety net before push; PR review = the team gate'],
-          ['What do you do with a false positive?', 'Reply @coderabbitai ignore this, or add path_instructions exclusions'],
-          ['Does this replace human review?', 'It replaces first-pass nit-picking — human review focuses on intent and design'],
-          ['How do you roll this out to a team?', 'Start with "chill" profile; ramp up as the team agrees on what matters'],
+          ['Before push', 'IDE Extension', 'Reviews staged changes inline — catches issues before they leave your machine'],
+          ['Selection review', 'IDE Extension', 'Focuses on a highlighted function or block — targeted, no noise'],
+          ['Inline chat', 'IDE Extension', 'Ask questions and apply fixes without leaving the editor'],
+          ['PR opened', 'GitHub App', 'Automatic summary, walkthrough, and severity-tagged inline comments'],
+          ['PR conversation', 'GitHub App', 'Chat with @coderabbitai to list issues, assess risk, or generate tests'],
+          ['Incremental review', 'GitHub App', 'Re-reviews only changed lines on each new push — no repeated noise'],
+          ['Team rules', '.coderabbit.yaml', 'path_instructions enforce your conventions on every PR automatically'],
+        ]}
+      />
+
+      <Divider />
+
+      <H3>Key takeaways</H3>
+      <Stack gap={8}>
+        <Callout tone="info" title="Shift left, not just faster">
+          The biggest gain isn't speed on the PR — it's catching critical issues (SQL injection, hardcoded secrets) before the code ever reaches a reviewer.
+        </Callout>
+        <Callout tone="neutral" title="It complements human review">
+          CodeRabbit handles first-pass mechanical checks. Your team's review time moves to intent, architecture, and edge cases — the parts only humans can assess.
+        </Callout>
+        <Callout tone="success" title="It learns your conventions">
+          Commit a <code>.coderabbit.yaml</code> with <code>path_instructions</code> and every future PR is reviewed against your team's specific standards — not just generic best practices.
+        </Callout>
+      </Stack>
+
+      <Divider />
+
+      <H3>Next steps</H3>
+      <Table
+        headers={['Action', 'How', 'Time']}
+        rows={[
+          ['Install the IDE extension', 'Extensions → search "CodeRabbit" → Install', '2 min'],
+          ['Install the GitHub App', 'coderabbit.ai → Install on your org or repo', '3 min'],
+          ['Add a .coderabbit.yaml', 'Commit to your default branch with your team\'s path_instructions', '15 min'],
+          ['Run your first IDE review', 'Stage any file → CodeRabbit panel → Review Staged Changes', '5 min'],
+          ['Open a real PR', 'Push a branch and watch the automatic review post within 60s', 'Next PR'],
+          ['Share with your team', 'Share today\'s demo repo: github.com/abhijeet-dhumal/coderabitt-demo', 'Today'],
+        ]}
+      />
+
+      <Divider />
+
+      <H3>Questions we didn't get to</H3>
+      <Table
+        headers={['Question', 'Answer']}
+        rows={[
+          ['Does CodeRabbit work with GitLab / Bitbucket?', 'Yes — GitLab and Azure DevOps are supported in addition to GitHub'],
+          ['Can I suppress a specific rule permanently?', 'Yes — add path_instructions exclusions or reply @coderabbitai ignore this in any comment'],
+          ['Is the review context stored anywhere?', 'CodeRabbit retains PR context within a session; it does not train on your code'],
+          ['What\'s the "chill" vs "assertive" profile difference?', 'Chill surfaces only high-confidence issues; assertive flags everything including style and minor risks'],
+          ['How do we handle monorepos?', 'Use path_filters in .coderabbit.yaml to scope reviews to specific packages or directories'],
         ]}
       />
     </Stack>
@@ -525,11 +537,11 @@ export default function CodeRabbitWorkshop() {
   const [section, setSection] = useCanvasState<Section>('audience');
 
   const sectionOptions = [
-    { value: 'audience',  label: '0. Audience Today' },
+    { value: 'audience',  label: '0. Participant Responses' },
     { value: 'story',     label: '1. The Scenario' },
     { value: 'local',     label: '2. Act 1: Review Before Push' },
     { value: 'pr',        label: '3. Act 2: Automated PR Review' },
-    { value: 'exercises', label: '4. Hands-on' },
+    { value: 'exercises', label: '4. Wrap Up' },
   ];
 
   return (
@@ -546,11 +558,11 @@ export default function CodeRabbitWorkshop() {
           onChange={(v) => setSection(v as Section)}
         />
         <Spacer />
-        <Pill tone={section === 'audience'  ? 'success' : 'neutral'} onClick={() => setSection('audience')}>Audience</Pill>
+        <Pill tone={section === 'audience'  ? 'success' : 'neutral'} onClick={() => setSection('audience')}>Participants</Pill>
         <Pill tone={section === 'story'     ? 'success' : 'neutral'} onClick={() => setSection('story')}>Scenario</Pill>
         <Pill tone={section === 'local'     ? 'success' : 'neutral'} onClick={() => setSection('local')}>Act 1</Pill>
         <Pill tone={section === 'pr'        ? 'success' : 'neutral'} onClick={() => setSection('pr')}>Act 2</Pill>
-        <Pill tone={section === 'exercises' ? 'success' : 'neutral'} onClick={() => setSection('exercises')}>Hands-on</Pill>
+        <Pill tone={section === 'exercises' ? 'success' : 'neutral'} onClick={() => setSection('exercises')}>Wrap Up</Pill>
       </Row>
 
       <Divider />
