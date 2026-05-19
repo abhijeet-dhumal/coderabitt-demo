@@ -57,6 +57,7 @@ function AudienceSection() {
     <Stack gap={24}>
       <H2>Participant Responses</H2>
       <Text tone="secondary">You filled out a pre-workshop survey. Here's what you told us.</Text>
+      <Stat value="15 min" label="This segment" />
 
       <Grid columns={2} gap={24}>
         <Stack gap={8}>
@@ -150,7 +151,8 @@ function StorySection() {
         A real repository with real mistakes. Everything CodeRabbit flags today is code that looks fine at first glance — and ships to production all the time.
       </Text>
 
-      <Grid columns={3} gap={12}>
+      <Grid columns={4} gap={12}>
+        <Stat value="15 min" label="This segment" />
         <Stat value="2 files" label="Changed in PR #1" />
         <Stat value="13" label="Issues found by CodeRabbit" tone="danger" />
         <Stat value="6" label="Critical severity" tone="danger" />
@@ -316,7 +318,7 @@ function PRSection() {
     <Stack gap={24}>
       <H2>Act 2 — Automated PR Review</H2>
       <Grid columns={4} gap={12}>
-        <Stat value="35 min" label="This segment" />
+        <Stat value="30 min" label="This segment" />
         <Stat value="13" label="Issues found" tone="danger" />
         <Stat value="6" label="Critical" tone="danger" />
         <Stat value="7" label="Inline comments" tone="warning" />
@@ -462,7 +464,8 @@ function ExercisesSection() {
         You've seen CodeRabbit work at every stage of the development loop — from your first keystroke to a merged PR. Here's what to take away and where to go next.
       </Text>
 
-      <Grid columns={3} gap={12}>
+      <Grid columns={4} gap={12}>
+        <Stat value="10 min" label="This segment" />
         <Stat value="2 layers" label="IDE extension + PR review" />
         <Stat value="13" label="Issues caught automatically" tone="danger" />
         <Stat value="0" label="Teammates interrupted" tone="success" />
