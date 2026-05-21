@@ -23,8 +23,7 @@ def login():
     result = login_user(data["username"], data["password"])
     if result:
         return jsonify(result)
-    # leaks whether username exists vs wrong password
-    return jsonify({"error": "Invalid username"}), 401
+    return jsonify({"error": "Invalid credentials"}), 401
 
 
 @app.route("/admin/users")
