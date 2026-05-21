@@ -432,8 +432,27 @@
   async function loadTeam() {
     const listEl = document.getElementById('member-list');
     listEl.innerHTML = '';
+    if (!authToken) {
+      showMsg('team-msg', 'Please sign in before loading team members.', 'warn');
+      switchTab('login');
+      return;
+    }
     try {
-      const res = await fetch('/admin/users');
+      const res = await fetch('/admin/users', {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+        },
+      });
+      if (res.status === 401 || res.status === 403) {
+        authToken = null;
+        showMsg('team-msg', 'Session expired or unauthorized. Please sign in again.', 'error');
+        switchTab('login');
+        return;
+      }
+      if (!res.ok) {
+        showMsg('team-msg', 'Failed to load team members', 'error');
+        return;
+      }
       const data = await res.json();
       if (!data.length) {
         showMsg('team-msg', 'No members yet — register someone first', 'warn');
