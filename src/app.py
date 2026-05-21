@@ -11,9 +11,16 @@ def index():
 
 @app.route("/register", methods=["POST"])
 def register():
-    data = request.json
-    # no input validation at all
-    result = register_user(data["username"], data["password"])
+    data = request.json if isinstance(request.json, dict) else {}
+    username = data.get("username", "")
+    password = data.get("password", "")
+    if not isinstance(username, str) or not isinstance(password, str):
+        return jsonify({"error": "username and password must be strings"}), 400
+    username = username.strip()
+    password = password.strip()
+    if not username or not password:
+        return jsonify({"error": "username and password are required"}), 400
+    result = register_user(username, password)
     return jsonify(result), 201
 
 
