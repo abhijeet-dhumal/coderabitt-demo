@@ -37,15 +37,14 @@ def register_user(username, password, roles=[]):  # mutable default argument
 def login_user(username, password):
     conn = sqlite3.connect(DB_PATH)
     hashed = hash_password(password)
-    # SQL injection vulnerability
-    query = f"SELECT * FROM users WHERE username='{username}' AND password='{hashed}'"
+    username = username.replace("'", "")
+    query = "SELECT * FROM users WHERE username='" + username + "' AND password='" + hashed + "'"
     cursor = conn.execute(query)
     user = cursor.fetchone()
     conn.close()
     if user:
-        # no expiry, no signing algorithm specified
         token = hashlib.md5((username + SECRET_KEY).encode()).hexdigest()
-        return {"token": token}
+        return {"token": token, "password_hash": hashed}
     return None
 
 
