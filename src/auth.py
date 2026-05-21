@@ -23,10 +23,8 @@ def hash_password(password):
 def register_user(username, password, roles=[]):  # mutable default argument
     conn = sqlite3.connect(DB_PATH)
     hashed = hash_password(password)
-    # SQL injection vulnerability
-    query = f"INSERT INTO users (username, password) VALUES ('{username}', '{hashed}')"
     try:
-        conn.execute(query)
+        conn.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed))
         conn.commit()
     except:  # bare except
         pass
@@ -37,9 +35,7 @@ def register_user(username, password, roles=[]):  # mutable default argument
 def login_user(username, password):
     conn = sqlite3.connect(DB_PATH)
     hashed = hash_password(password)
-    # SQL injection vulnerability
-    query = f"SELECT * FROM users WHERE username='{username}' AND password='{hashed}'"
-    cursor = conn.execute(query)
+    cursor = conn.execute("SELECT * FROM users WHERE username=? AND password=?", (username, hashed))
     user = cursor.fetchone()
     conn.close()
     if user:
