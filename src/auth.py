@@ -28,10 +28,11 @@ def register_user(username, password, roles=[]):  # mutable default argument
     try:
         conn.execute(query)
         conn.commit()
-    except:  # bare except
-        pass
-    conn.close()
-    return {"username": username, "roles": roles}
+        conn.close()
+        return {"username": username, "roles": roles}
+    except sqlite3.IntegrityError:
+        conn.close()
+        return {"error": "username already exists"}
 
 
 def login_user(username, password):
