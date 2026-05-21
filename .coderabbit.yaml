@@ -1,0 +1,62 @@
+reviews:
+  # "chill"     — high-confidence issues only, less noise
+  # "assertive" — flags everything including minor risks (recommended for security-sensitive projects)
+  profile: "assertive"
+
+  # auto_review: controls when CodeRabbit triggers automatically
+  # auto_review:
+  #   enabled: true          # default: true
+  #   drafts: false          # review draft PRs too (default: false)
+  #   base_branches:         # only review PRs targeting these branches
+  #     - main
+  #     - "release/.*"
+
+  # abort_on_close: stop review if PR is closed before it finishes (default: true)
+  # abort_on_close: true
+
+  # finishing_touches: suggest docstrings, README updates after review (default: true)
+  # finishing_touches:
+  #   docstrings:
+  #     enabled: true
+
+  path_instructions:
+    # Scoped rules — plain English, applied per file glob.
+    # Add as many path blocks as needed (e.g. separate rules for tests/, migrations/).
+    - path: "**/*.py"
+      instructions: >
+        Flag any route or endpoint missing an authentication check.
+        Flag MD5 or SHA1 used for password hashing — recommend bcrypt or argon2.
+        Flag hardcoded secrets, API keys, or tokens in source code.
+        Flag SQL queries built with f-strings or string concatenation.
+        Flag bare except clauses that silently swallow errors.
+        Flag debug=True or host="0.0.0.0" in Flask app.run calls.
+
+    # - path: "tests/**"
+    #   instructions: >
+    #     Ensure every test has at least one assertion.
+    #     Flag tests that mock the function under test rather than its dependencies.
+
+    # - path: "migrations/**"
+    #   instructions: >
+    #     Flag irreversible migrations missing a downgrade path.
+
+  # path_filters: limit which files CodeRabbit reviews at all (useful for monorepos)
+  # path_filters:
+  #   - "!**/node_modules/**"
+  #   - "!**/*.lock"
+  #   - "src/**"
+
+    # canvas/ contains Cursor workshop presentation files — not production code, skip review
+    - path: "canvas/**"
+      instructions: >
+        These are Cursor canvas files used for workshop presentations only.
+        Do not review for security, style, or correctness issues.
+
+# chat:
+#   auto_reply: true   # CodeRabbit replies to @coderabbitai mentions automatically (default: true)
+
+# knowledge_base:
+#   learnings:
+#     scope: auto      # "auto" | "local" | "global" — where learnings are stored
+#   issues:
+#     scope: auto      # pull context from linked GitHub issues

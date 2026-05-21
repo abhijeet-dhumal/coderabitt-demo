@@ -51,7 +51,7 @@ def login_user(username, password):
 
 def get_all_users():
     conn = sqlite3.connect(DB_PATH)
-    cursor = conn.execute("SELECT id, username, password FROM users")  # exposes password hash
+    cursor = conn.execute("SELECT id, username FROM users")
     users = cursor.fetchall()
     conn.close()
     return users
