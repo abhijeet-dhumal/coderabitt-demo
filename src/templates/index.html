@@ -361,6 +361,8 @@
 </div>
 
 <script>
+  let authToken = null;
+
   function switchTab(name) {
     document.querySelectorAll('.tab').forEach((t, i) => {
       t.classList.toggle('active', ['register','login','team'][i] === name);
@@ -411,15 +413,19 @@
       });
       const data = await res.json();
       if (res.ok) {
+        authToken = data.token;
         showMsg('login-msg', 'Signed in successfully', 'success');
-        box.textContent = 'Token: ' + data.token;
+        box.textContent = 'Signed in ✓';
         box.style.display = 'block';
       } else {
+        authToken = null;
         showMsg('login-msg', data.error || 'Login failed', 'error');
         box.style.display = 'none';
       }
     } catch (err) {
+      authToken = null;
       showMsg('login-msg', `Server error — ${err.message}`, 'error');
+      box.style.display = 'none';
     }
   }
 
