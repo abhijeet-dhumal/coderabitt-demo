@@ -57,7 +57,7 @@ function AudienceSection() {
     <Stack gap={24}>
       <H2>Setting the Stage</H2>
       <Text tone="secondary">Why agentic code review exists, and what you told us in the pre-workshop survey.</Text>
-      <Stat value="15 min" label="This segment" />
+
 
       <Divider />
 
@@ -192,12 +192,6 @@ function StorySection() {
         A real repository with real mistakes. Everything CodeRabbit flags today is code that looks fine at first glance — and ships to production all the time.
       </Text>
 
-      <Grid columns={4} gap={12}>
-        <Stat value="15 min" label="This segment" />
-        <Stat value="2 files" label="Changed in PR #1" />
-        <Stat value="13" label="Issues found by CodeRabbit" tone="danger" />
-        <Stat value="6" label="Critical severity" tone="danger" />
-      </Grid>
 
       <Divider />
 
@@ -285,6 +279,8 @@ if __name__ == "__main__":
         <Text>Repo: <strong>github.com/abhijeet-dhumal/coderabitt-demo</strong></Text>
         <Text>Live PR: <strong>github.com/abhijeet-dhumal/coderabitt-demo/pull/1</strong></Text>
         <Text>Branch: <strong>feat/add-user-auth</strong></Text>
+        <Text>Demo app: <strong>http://localhost:8080</strong> — Team Portal UI with 10 open issues listed</Text>
+        <Text>Issues: <strong>github.com/abhijeet-dhumal/coderabitt-demo/issues</strong></Text>
       </Stack>
     </Stack>
   );
@@ -296,8 +292,7 @@ function LocalSection() {
   return (
     <Stack gap={24}>
       <H2>Act 1 — Review Before You Push</H2>
-      <Grid columns={3} gap={12}>
-        <Stat value="20 min" label="This segment" />
+      <Grid columns={2} gap={12}>
         <Stat value="0" label="PRs needed" />
         <Stat value="Pre-push" label="Stage" />
       </Grid>
@@ -312,11 +307,13 @@ function LocalSection() {
       <Table
         headers={['Step', 'What to do']}
         rows={[
-          ['Install', 'Extensions → search "CodeRabbit" → Install (publisher: CodeRabbit)'],
+          ['Install CLI', 'Run the command below in your terminal'],
+          ['Install extension', 'Extensions → search "CodeRabbit" → Install (publisher: CodeRabbit)'],
           ['Sign in', 'Robot icon in activity bar → Sign in with GitHub → Authorize in browser'],
           ['Verify', 'Your username appears in the CodeRabbit panel'],
         ]}
       />
+      <CodeBlock>{`curl -fsSL https://cli.coderabbit.ai/install.sh | sh`}</CodeBlock>
 
       <Divider />
 
@@ -358,10 +355,9 @@ function PRSection() {
   return (
     <Stack gap={24}>
       <H2>Act 2 — Automated PR Review</H2>
-      <Grid columns={4} gap={12}>
-        <Stat value="30 min" label="This segment" />
-        <Stat value="13" label="Issues found" tone="danger" />
-        <Stat value="6" label="Critical" tone="danger" />
+      <Grid columns={3} gap={12}>
+        <Stat value="10" label="Issues found" tone="danger" />
+        <Stat value="4" label="Critical" tone="danger" />
         <Stat value="7" label="Inline comments" tone="warning" />
       </Grid>
 
@@ -491,6 +487,21 @@ reviews:
         Flag any use of MD5 or SHA1 for password hashing.
         Flag hardcoded secrets or API keys.`}</CodeBlock>
       <Text tone="secondary" size="small">Once committed to your default branch, every PR is reviewed against these rules automatically.</Text>
+
+      <Divider />
+
+      <H3>Hands-on exercise — pick an issue and fix it</H3>
+      <Text>10 open issues are waiting on the repo. Each one maps to a vulnerability in the code — and is visible in the running app at <strong>localhost:8080</strong>.</Text>
+      <Table
+        headers={['Step', 'What to do']}
+        rows={[
+          ['1. Fork', 'Fork github.com/abhijeet-dhumal/coderabitt-demo'],
+          ['2. Branch', 'git checkout feat/add-user-auth && git checkout -b fix/issue-N-your-name'],
+          ['3. Pick', 'Open localhost:8080 → scroll to Open Issues → pick one → "Assign yourself on GitHub"'],
+          ['4. Fix', 'Make the fix — use CodeRabbit IDE panel to review before pushing'],
+          ['5. PR', 'Push and open a PR to abhijeet-dhumal/coderabitt-demo — CodeRabbit reviews within 60s'],
+        ]}
+      />
     </Stack>
   );
 }
@@ -505,10 +516,9 @@ function ExercisesSection() {
         You've seen CodeRabbit work at every stage of the development loop — from your first keystroke to a merged PR. Here's what to take away and where to go next.
       </Text>
 
-      <Grid columns={4} gap={12}>
-        <Stat value="10 min" label="This segment" />
+      <Grid columns={3} gap={12}>
         <Stat value="2 layers" label="IDE extension + PR review" />
-        <Stat value="13" label="Issues caught automatically" tone="danger" />
+        <Stat value="10" label="Open issues on repo" tone="danger" />
         <Stat value="0" label="Teammates interrupted" tone="success" />
       </Grid>
 
