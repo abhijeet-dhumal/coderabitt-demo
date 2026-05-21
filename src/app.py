@@ -1,25 +1,12 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, render_template, request
 from auth import init_db, register_user, login_user, get_all_users
 
 app = Flask(__name__)
 
-USERS = [
-    {"id": 1, "name": "Alice", "email": "alice@example.com"},
-    {"id": 2, "name": "Bob", "email": "bob@example.com"},
-]
 
-
-@app.route("/users")
-def get_users():
-    return jsonify(USERS)
-
-
-@app.route("/users/<int:user_id>")
-def get_user(user_id):
-    for user in USERS:
-        if user["id"] == user_id:
-            return jsonify(user)
-    return jsonify({"error": "Not found"}), 404
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 
 @app.route("/register", methods=["POST"])
@@ -49,4 +36,4 @@ def admin_users():
 
 if __name__ == "__main__":
     init_db()
-    app.run(debug=True, host="0.0.0.0")  # debug=True and 0.0.0.0 in production
+    app.run(debug=True, host="0.0.0.0", port=8080)  # debug=True and 0.0.0.0 in production

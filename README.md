@@ -11,6 +11,10 @@ pip install -r requirements.txt
 python src/app.py
 ```
 
+Open [http://localhost:8080](http://localhost:8080) in your browser.
+
+> **macOS note:** Port 5000 is reserved by AirPlay Receiver. This app runs on 8080 to avoid the conflict.
+
 ## CodeRabbit CLI
 
 ```bash
@@ -43,11 +47,4 @@ src/          Flask app source (app.py, auth.py)
 tests/        pytest test suite
 canvas/       Workshop presentation canvas
 .github/      PR template
-```
-
-## Running tests
-
-```bash
-pip install pytest
-pytest tests/ -v
 ```

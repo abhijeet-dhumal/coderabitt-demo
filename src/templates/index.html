@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Portal</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px 60px;
+    }
+
+    .page { width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 32px; }
+
+    /* ── header ── */
+    header { }
+    header h1 { font-size: 20px; font-weight: 600; }
+    header p  { font-size: 13px; color: #666; margin-top: 4px; }
+
+    /* ── app card ── */
+    .card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .tab {
+      flex: 1; padding: 12px; font-size: 13px; font-weight: 500;
+      text-align: center; cursor: pointer; color: #666;
+      border: none; background: none; transition: color 0.15s;
+    }
+    .tab:hover { color: #1a1a1a; }
+    .tab.active { color: #1a1a1a; border-bottom: 2px solid #1a1a1a; margin-bottom: -1px; }
+
+    .panel { display: none; padding: 24px; flex-direction: column; gap: 16px; }
+    .panel.active { display: flex; }
+    .panel h2 { font-size: 15px; font-weight: 600; }
+
+    label { display: block; font-size: 12px; font-weight: 500; color: #444; margin-bottom: 4px; }
+
+    input[type="text"], input[type="password"] {
+      width: 100%; padding: 9px 11px; font-size: 14px;
+      border: 1px solid #d0d0d0; border-radius: 6px; outline: none;
+      transition: border-color 0.15s; margin-bottom: 12px;
+    }
+    input:focus { border-color: #1a1a1a; }
+
+    .btn {
+      width: 100%; padding: 10px; font-size: 14px; font-weight: 500;
+      border: none; border-radius: 6px; cursor: pointer;
+      background: #1a1a1a; color: #fff; transition: background 0.15s;
+    }
+    .btn:hover { background: #333; }
+    .btn-outline {
+      background: #fff; color: #1a1a1a; border: 1px solid #d0d0d0;
+    }
+    .btn-outline:hover { background: #f5f5f5; }
+
+    .message {
+      padding: 10px 12px; border-radius: 6px; font-size: 13px; display: none;
+    }
+    .success { background: #f0faf0; color: #1a6b1a; border: 1px solid #b6dfb6; }
+    .error   { background: #fff5f5; color: #b91c1c; border: 1px solid #fecaca; }
+    .warn    { background: #fff3cd; color: #7a4f00; border: 1px solid #f0c040; }
+
+    .token-box {
+      padding: 10px 12px; background: #f9f9f9;
+      border: 1px solid #e0e0e0; border-radius: 6px;
+      font-size: 12px; font-family: monospace; word-break: break-all; display: none;
+    }
+
+    .member-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px;
+    }
+    .member-item:last-child { border-bottom: none; }
+    .avatar {
+      width: 30px; height: 30px; border-radius: 50%; background: #e0e0e0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600; color: #555; flex-shrink: 0;
+    }
+
+    /* ── issues section ── */
+    .issues-section { display: flex; flex-direction: column; gap: 12px; }
+
+    .issues-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .issues-header h2 { font-size: 15px; font-weight: 600; }
+    .issues-header span { font-size: 12px; color: #888; }
+
+    .issue-item {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .issue-top {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .issue-num {
+      font-size: 11px; font-weight: 600; color: #aaa; flex-shrink: 0;
+    }
+    .issue-title { font-size: 14px; font-weight: 500; flex: 1; }
+    .sev {
+      font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .sev-critical { background: #fee2e2; color: #b91c1c; }
+    .sev-high     { background: #fff3cd; color: #7a4f00; }
+    .sev-medium   { background: #e0f0ff; color: #1a5a8f; }
+
+    .issue-file {
+      font-size: 11px; color: #888;
+      font-family: monospace;
+      padding-left: 30px;
+    }
+
+    .issue-repro {
+      font-size: 12px; color: #555;
+      background: #f9f9f9;
+      border: 1px solid #ebebeb;
+      border-radius: 5px;
+      padding: 8px 10px;
+      margin-top: 2px;
+      line-height: 1.6;
+    }
+    .issue-repro strong { color: #1a1a1a; }
+    .issue-repro code {
+      background: #eee; padding: 1px 5px; border-radius: 3px;
+      font-size: 11px; font-family: monospace;
+    }
+    .gh-link {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #1a5a8f;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .gh-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <h1>Team Portal</h1>
+    <p>Internal team directory · CodeRabbit Workshop Demo</p>
+  </header>
+
+  <!-- App -->
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('register')">Register</button>
+      <button class="tab" onclick="switchTab('login')">Login</button>
+      <button class="tab" onclick="switchTab('team')">Team</button>
+    </div>
+
+    <div id="panel-register" class="panel active">
+      <h2>Join the team</h2>
+      <form onsubmit="handleRegister(event)">
+        <label for="reg-username">Username</label>
+        <input id="reg-username" type="text" placeholder="your-name" />
+        <label for="reg-password">Password</label>
+        <input id="reg-password" type="password" placeholder="••••••••" />
+        <button type="submit" class="btn">Create account</button>
+      </form>
+      <div id="reg-msg" class="message"></div>
+    </div>
+
+    <div id="panel-login" class="panel">
+      <h2>Sign in</h2>
+      <form onsubmit="handleLogin(event)">
+        <label for="login-username">Username</label>
+        <input id="login-username" type="text" placeholder="your-name" />
+        <label for="login-password">Password</label>
+        <input id="login-password" type="password" placeholder="••••••••" />
+        <button type="submit" class="btn">Sign in</button>
+      </form>
+      <div id="login-msg" class="message"></div>
+      <div id="token-box" class="token-box"></div>
+    </div>
+
+    <div id="panel-team" class="panel">
+      <h2>Team members</h2>
+      <button class="btn btn-outline" onclick="loadTeam()">Load members</button>
+      <div id="team-msg" class="message"></div>
+      <div id="member-list"></div>
+    </div>
+  </div>
+
+  <!-- Issues -->
+  <div class="issues-section">
+    <div class="issues-header">
+      <h2>Open Issues</h2>
+      <a href="https://github.com/abhijeet-dhumal/coderabitt-demo/issues" target="_blank" style="font-size:12px;color:#1a5a8f;text-decoration:none;font-weight:500;">View all on GitHub →</a>
+    </div>
+    <p style="font-size:12px;color:#888;">Pick one · assign yourself on GitHub · fix it · open a PR</p>
+
+    <div class="issue-item">
+      <div class="issue-top">
+        <span class="issue-num">#1</span>
+        <span class="issue-title">SQL injection in register</span>
+        <span class="sev sev-critical">Critical</span>
+      </div>
+      <span class="issue-file">auth.py · register_user()</span>
+      <div class="issue-repro">
+        <strong>Reproduce:</strong> Register with username <code>' OR '1'='1' --</code> — inserts without error.
+        Fix by replacing the f-string query with a parameterized <code>?</code> placeholder.
+        <a class="gh-link" href="https://github.com/abhijeet-dhumal/coderabitt-demo/issues/3" target="_blank">Assign yourself on GitHub →</a>
+      </div>
+    </div>
+
+    <div class="issue-item">
+      <div class="issue-top">
+        <span class="issue-num">#2</span>
+        <span class="issue-title">SQL injection in login</span>
+        <span class="sev sev-critical">Critical</span>
+      </div>
+      <span class="issue-file">auth.py · login_user()</span>
+      <div class="issue-repro">
+        <strong>Reproduce:</strong> Login with username <code>admin</code> and password <code>' OR '1'='1' --</code> — bypasses authentication entirely.
+        Fix with a parameterized query.
+        <a class="gh-link" href="https://github.com/abhijeet-dhumal/coderabitt-demo/issues/5" target="_blank">Assign yourself on GitHub →</a>
+      </div>
+    </div>
+
+    <div class="issue-item">
+      <div class="issue-top">
+        <span class="issue-num">#3</span>
+        <span class="issue-title">MD5 password hashing</span>
+        <span class="sev sev-critical">Critical</span>
+      </div>
+      <span class="issue-file">auth.py · hash_password()</span>
+      <div class="issue-repro">
+        <strong>Reproduce:</strong> Register an account, then login — observe the 32-char token returned.
+        Both the stored password and the token are MD5 hashes, crackable offline in seconds.
+        Fix by replacing with <code>bcrypt</code>.
+        <a class="gh-link" href="https://github.com/abhijeet-dhumal/coderabitt-demo/issues/6" target="_blank">Assign yourself on GitHub →</a>
+      </div>
+    </div>
+
+    <div class="issue-item">
+      <div class="issue-top">
+        <span class="issue-num">#4</span>
+        <span class="issue-title">Hardcoded SECRET_KEY</span>
+        <span class="sev sev-critical">Critical</span>
+      </div>
+      <span class="issue-file">auth.py · line 4</span>
+      <div class="issue-repro">
+        <strong>Reproduce:</strong> Open <code>src/auth.py</code> — <code>SECRET_KEY = "supersecret123"</code> is in plain source.
+        Anyone with repo access can forge tokens. Fix by reading from <code>os.getenv("SECRET_KEY")</code>.
+        <a class="gh-link" href="https://github.com/abhijeet-dhumal/coderabitt-demo/issues/7" target="_blank">Assign yourself on GitHub →</a>
+      </div>
+    </div>
+
+    <div class="issue-item">
+      <div class="issue-top">
+        <span class="issue-num">#5</span>
+        <span class="issue-title">Bare except swallows errors</span>
+        <span class="sev sev-medium">Medium</span>
+      </div>
+      <span class="issue-file">auth.py · register_user()</span>
+      <div class="issue-repro">
+        <strong>Reproduce:</strong> Register the same username twice — no error is shown.
+        The duplicate key violation is silently swallowed by a bare <code>except: pass</code>.
+        Fix by catching <code>sqlite3.IntegrityError</code> specifically and returning a proper error.
+        <a class="gh-link" href="https://github.com/abhijeet-dhumal/coderabitt-demo/issues/8" target="_blank">Assign yourself on GitHub →</a>
+      </div>
+    </div>
+
+    <div class="issue-item">
+      <div class="issue-top">
+        <span class="issue-num">#6</span>
+        <span class="issue-title">No input validation on /register</span>
+        <span class="sev sev-high">High</span>
+      </div>
+      <span class="issue-file">app.py · /register</span>
+      <div class="issue-repro">
+        <strong>Reproduce:</strong> Click "Create account" with empty fields — server returns a 500 crash.
+        Fix by checking for missing or empty <code>username</code> and <code>password</code> before calling <code>register_user</code>.
+        <a class="gh-link" href="https://github.com/abhijeet-dhumal/coderabitt-demo/issues/9" target="_blank">Assign yourself on GitHub →</a>
+      </div>
+    </div>
+
+    <div class="issue-item">
+      <div class="issue-top">
+        <span class="issue-num">#7</span>
+        <span class="issue-title">Username enumeration in /login</span>
+        <span class="sev sev-high">High</span>
+      </div>
+      <span class="issue-file">app.py · /login</span>
+      <div class="issue-repro">
+        <strong>Reproduce:</strong> Login with a valid username and wrong password — response says <code>"Invalid username"</code>, confirming the account exists.
+        Fix by returning a generic <code>"Invalid credentials"</code> regardless of which field was wrong.
+        <a class="gh-link" href="https://github.com/abhijeet-dhumal/coderabitt-demo/issues/10" target="_blank">Assign yourself on GitHub →</a>
+      </div>
+    </div>
+
+    <div class="issue-item">
+      <div class="issue-top">
+        <span class="issue-num">#8</span>
+        <span class="issue-title">Unauthenticated /admin/users endpoint</span>
+        <span class="sev sev-critical">Critical</span>
+      </div>
+      <span class="issue-file">app.py · /admin/users</span>
+      <div class="issue-repro">
+        <strong>Reproduce:</strong> Open <code>/admin/users</code> in a new browser tab — all registered users are returned with no login required.
+        The Team tab above uses this same endpoint. Fix by adding a token check on the request.
+        <a class="gh-link" href="https://github.com/abhijeet-dhumal/coderabitt-demo/issues/11" target="_blank">Assign yourself on GitHub →</a>
+      </div>
+    </div>
+
+    <div class="issue-item">
+      <div class="issue-top">
+        <span class="issue-num">#9</span>
+        <span class="issue-title">debug=True and host=0.0.0.0 in production</span>
+        <span class="sev sev-high">High</span>
+      </div>
+      <span class="issue-file">app.py · app.run()</span>
+      <div class="issue-repro">
+        <strong>Reproduce:</strong> Check the terminal — Flask starts with <code>Debug mode: on</code> and binds to all interfaces.
+        The Werkzeug interactive debugger is exposed to the network, enabling remote code execution.
+        Fix by reading both values from environment variables.
+        <a class="gh-link" href="https://github.com/abhijeet-dhumal/coderabitt-demo/issues/12" target="_blank">Assign yourself on GitHub →</a>
+      </div>
+    </div>
+
+    <div class="issue-item">
+      <div class="issue-top">
+        <span class="issue-num">#10</span>
+        <span class="issue-title">Auth token exposed in plain DOM</span>
+        <span class="sev sev-medium">Medium</span>
+      </div>
+      <span class="issue-file">templates/index.html</span>
+      <div class="issue-repro">
+        <strong>Reproduce:</strong> Login successfully, then open browser DevTools → Elements — the token is readable as plain text in the DOM.
+        Fix by avoiding rendering the raw token; show a masked value or store it only in memory.
+        <a class="gh-link" href="https://github.com/abhijeet-dhumal/coderabitt-demo/issues/13" target="_blank">Assign yourself on GitHub →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach((t, i) => {
+      t.classList.toggle('active', ['register','login','team'][i] === name);
+    });
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+  }
+
+  function showMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'message ' + type;
+    el.style.display = 'block';
+  }
+
+  async function handleRegister(e) {
+    e.preventDefault();
+    const username = document.getElementById('reg-username').value.trim();
+    const password = document.getElementById('reg-password').value;
+    try {
+      const res = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showMsg('reg-msg', `Account created for "${data.username}"`, 'success');
+        e.target.reset();
+      } else {
+        showMsg('reg-msg', data.error || 'Registration failed', 'error');
+      }
+    } catch (err) {
+      showMsg('reg-msg', `Server error — ${err.message}`, 'error');
+    }
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value;
+    const box = document.getElementById('token-box');
+    try {
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showMsg('login-msg', 'Signed in successfully', 'success');
+        box.textContent = 'Token: ' + data.token;
+        box.style.display = 'block';
+      } else {
+        showMsg('login-msg', data.error || 'Login failed', 'error');
+        box.style.display = 'none';
+      }
+    } catch (err) {
+      showMsg('login-msg', `Server error — ${err.message}`, 'error');
+    }
+  }
+
+  async function loadTeam() {
+    const listEl = document.getElementById('member-list');
+    listEl.innerHTML = '';
+    try {
+      const res = await fetch('/admin/users');
+      const data = await res.json();
+      if (!data.length) {
+        showMsg('team-msg', 'No members yet — register someone first', 'warn');
+        return;
+      }
+      document.getElementById('team-msg').style.display = 'none';
+      const members = data.filter(([id, u]) => u && u.trim());
+      listEl.innerHTML = members.map(([id, username]) =>
+        `<div class="member-item">
+          <div class="avatar">${username.trim()[0].toUpperCase()}</div>
+          <span>${username}</span>
+        </div>`
+      ).join('');
+    } catch (err) {
+      showMsg('team-msg', `Server error — ${err.message}`, 'error');
+    }
+  }
+</script>
+</body>
+</html>
